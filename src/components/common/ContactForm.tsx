@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { siteConfig } from "@/content/site-config";
 import { buildWhatsAppUrl } from "@/lib/utils";
 import { Send, CheckCircle2, MessageCircle } from "lucide-react";
@@ -10,14 +11,24 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ defaultProduct }: ContactFormProps) {
+  const searchParams = useSearchParams();
+  const queryProduct = searchParams.get("product") || defaultProduct || "General Inquiry / Technical Audit";
+
   const [formData, setFormData] = useState({
     name: "",
     company: "",
     email: "",
     phone: "",
-    productInterest: defaultProduct || "General Inquiry / Technical Audit",
+    productInterest: queryProduct,
     message: "",
   });
+
+  useEffect(() => {
+    const prod = searchParams.get("product");
+    if (prod) {
+      setFormData((prev) => ({ ...prev, productInterest: prod }));
+    }
+  }, [searchParams]);
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);

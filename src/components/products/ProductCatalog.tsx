@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Product, ProductCategory } from "@/types/product";
 import { ProductCard } from "@/components/products/ProductCard";
 import { Search, SlidersHorizontal, X } from "lucide-react";
@@ -16,9 +17,18 @@ export function ProductCatalog({
   categories,
   defaultCategory = "all",
 }: ProductCatalogProps) {
+  const searchParams = useSearchParams();
+  const queryCategory = searchParams.get("category") || defaultCategory;
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(defaultCategory);
+  const [selectedCategory, setSelectedCategory] = useState(queryCategory);
   const [selectedType, setSelectedType] = useState<string>("all");
+
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) {
+      setSelectedCategory(cat);
+    }
+  }, [searchParams]);
 
   const machineTypes = useMemo(() => {
     const types = new Set<string>();

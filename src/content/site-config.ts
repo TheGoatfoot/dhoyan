@@ -6,7 +6,7 @@ export const siteConfig: SiteConfig = {
   tagline: "Industrial Packaging & High-Tensile Strapping Systems",
   description:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Premium strapping bands, automated arch machines, and ergonomic packaging tools since 1998.",
-  url: "https://dhoyan-industrial.example.com",
+  url: "https://thegoatfoot.github.io/dhoyan",
   foundedYear: 1998,
   phone: "+62 21 5550 1988",
   email: "inquiry@aegis-polypack.example",

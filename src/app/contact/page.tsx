@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Metadata } from "next";
 import { siteConfig } from "@/content/site-config";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
@@ -20,20 +20,10 @@ export const metadata: Metadata = {
     "Get in touch with Aegis PolyPack for strapping band quotations, technical line audits, and machinery servicing.",
 };
 
-interface ContactPageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function ContactPage({ searchParams }: ContactPageProps) {
-  const resolvedParams = await searchParams;
-  const initialProduct =
-    typeof resolvedParams.product === "string" ? resolvedParams.product : undefined;
-
+export default function ContactPage() {
   const waUrl = buildWhatsAppUrl(
     siteConfig.whatsappNumber,
-    initialProduct
-      ? `Inquiry regarding ${initialProduct}`
-      : "Hello Aegis PolyPack, I would like to inquire about industrial strapping systems."
+    "Hello Aegis PolyPack, I would like to inquire about industrial strapping systems."
   );
 
   return (
@@ -150,12 +140,19 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           </div>
         </div>
 
-        {/* Interactive RFQ Form (Right Col) */}
+        {/* Interactive RFQ Form (Right Col) wrapped in Suspense for static export */}
         <div className="lg:col-span-7">
-          <ContactForm defaultProduct={initialProduct} />
+          <Suspense
+            fallback={
+              <div className="p-12 text-center text-slate-400 text-sm bg-white rounded-2xl border border-slate-200">
+                Loading inquiry form...
+              </div>
+            }
+          >
+            <ContactForm />
+          </Suspense>
         </div>
       </div>
     </div>
   );
 }
-

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Metadata } from "next";
 import { getAllProducts, getAllCategories } from "@/lib/products";
 import { ProductCatalog } from "@/components/products/ProductCatalog";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
-import { Package, ShieldCheck } from "lucide-react";
+import { Package } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Industrial Strapping Products Catalog — PP, PET & Machinery",
@@ -11,14 +11,7 @@ export const metadata: Metadata = {
     "Browse our complete catalog of virgin PP strapping, high-tensile PET bands, automated arch machines, and cordless friction weld tools.",
 };
 
-interface ProductsPageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const resolvedParams = await searchParams;
-  const initialCategory = typeof resolvedParams.category === "string" ? resolvedParams.category : "all";
-
+export default function ProductsPage() {
   const allProducts = getAllProducts();
   const allCategories = getAllCategories();
 
@@ -40,13 +33,19 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </p>
       </div>
 
-      {/* Product Catalog Browser (Client Component with live filtering) */}
-      <ProductCatalog
-        initialProducts={allProducts}
-        categories={allCategories}
-        defaultCategory={initialCategory}
-      />
+      {/* Product Catalog Browser wrapped in Suspense for static export */}
+      <Suspense
+        fallback={
+          <div className="p-12 text-center text-slate-400 text-sm">
+            Loading products catalog...
+          </div>
+        }
+      >
+        <ProductCatalog
+          initialProducts={allProducts}
+          categories={allCategories}
+        />
+      </Suspense>
     </div>
   );
 }
-
